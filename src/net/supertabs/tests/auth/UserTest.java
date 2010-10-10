@@ -27,8 +27,7 @@ public class UserTest {
         String password = "test password";
         SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
         
-        User u = new User();
-        u.setUserID(user_id, password, random);
+        User u = new User("username", password, user_id, random);
         
         assertEquals(user_id, u.getUserID(password));
     }
@@ -39,8 +38,7 @@ public class UserTest {
         String password = "test password";
         SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
         
-        User u = new User();
-        u.setUserID(user_id, password, random);
+        User u = new User("username", password, user_id, random);
         
         assertFalse(user_id == u.getUserID("test pass"));
     }
@@ -50,8 +48,8 @@ public class UserTest {
         String password = "some password";
         SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
         
-        User u = new User();
-        u.setPassword(password, random);
+        User u = new User("username", password, "a", random);
+
         assertTrue(u.checkPassword("some password"));
     }
     
@@ -60,9 +58,20 @@ public class UserTest {
         String password = "some password";
         SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
         
-        User u = new User();
-        u.setPassword(password, random);
+        User u = new User("username", password, "a", random);
+
         assertFalse(u.checkPassword("Other password"));
     }
-
+    
+    @Test
+    public void testCheckPasswordChange() throws NoSuchAlgorithmException {
+        String password = "some password";
+        String user_id = "deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0";
+        SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
+        
+        User u = new User("username", password, user_id, random);
+        
+        assertTrue(u.checkPassword(password));
+        assertEquals(user_id, u.getUserID(password));
+    }
 }
