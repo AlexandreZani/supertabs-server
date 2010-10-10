@@ -74,4 +74,17 @@ public class UserTest {
         assertTrue(u.checkPassword(password));
         assertEquals(user_id, u.getUserID(password));
     }
+    
+    @Test
+    public void testUserCopy() throws NoSuchAlgorithmException {
+        String password = "some password";
+        String user_id = "deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0";
+        SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
+        
+        User u = new User("username", password, user_id, random);
+        
+        User u2 = new User(u);
+        
+        assertTrue(u.equals(u2));
+    }
 }

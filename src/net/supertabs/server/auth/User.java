@@ -14,12 +14,40 @@ public class User {
     private BigInteger encrypted_uid;
     private BigInteger uid_salt;
     
+    public String getSaltedPassword() {
+        return this.salted_password.toString(16);
+    }
+    
+    public String getPasswordSalt() {
+        return this.password_salt.toString(16);
+    }
+    
+    public String getEncryptedUserID() {
+        return this.encrypted_uid.toString(16);
+    }
+    
+    public String getUserIDSalt() {
+        return this.uid_salt.toString(16);
+    }
+    
+    public User(User u) {
+        this(u.getUsername(), u.getSaltedPassword(), u.getPasswordSalt(), u.getEncryptedUserID(), u.getUserIDSalt());
+    }
+    
     public User(String username, String salted_password, String password_salt, String encrypted_uid, String uid_salt) {
         this.username = username;
-        this.salted_password = new BigInteger(salted_password);
-        this.password_salt = new BigInteger(password_salt);
-        this.encrypted_uid = new BigInteger(encrypted_uid);
-        this.uid_salt = new BigInteger(uid_salt);
+        this.salted_password = new BigInteger(salted_password, 16);
+        this.password_salt = new BigInteger(password_salt, 16);
+        this.encrypted_uid = new BigInteger(encrypted_uid, 16);
+        this.uid_salt = new BigInteger(uid_salt, 16);
+    }
+    
+    public boolean equals(User u) {
+        return u.getUsername().equals(this.username) &&
+            u.getEncryptedUserID().equals(this.getEncryptedUserID()) &&
+            u.getPasswordSalt().equals(this.getPasswordSalt()) &&
+            u.getSaltedPassword().equals(this.getSaltedPassword()) &&
+            u.getUserIDSalt().equals(this.getUserIDSalt());
     }
     
     public User(String username, String password, String user_id, SecureRandom random) throws NoSuchAlgorithmException {
@@ -51,7 +79,7 @@ public class User {
         digest.reset();
         digest.update(password.getBytes());
         digest.update(this.password_salt.toByteArray());
-        return this.salted_password.compareTo(new BigInteger(digest.digest())) == 0;
+        return this.salted_password.equals(new BigInteger(digest.digest()));
     }
     
     public void setUserID(String user_id, String password, SecureRandom random) throws NoSuchAlgorithmException {
