@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MySQLDB name="SupertabsDB">
+    <table name="Users">
+        <field name="UserName" type="VARCHAR(255)" />
+        <field name="SaltedPassword" type="VARCHAR(255)" description="SHA256(Password+Salt).toString()" />
+        <field name="PasswordSalt" type="VARCHAR(255)" />
+        <field name="EncryptedUserId" type="VARCHAR(255)" />
+        <field name="UserIdSalt" type="VARCHAR(255)" />
+    </table>
+    
+    <table name="Sessions">
+        <field name="SessionID" type="VARCHAR(255)" />
+        <field name="UserId" type="VARCHAR(255)" />
+        <field name="LastTouched" type="INT" />
+    </table>
+    
+    <table name="Session">
+    </table>
+	<table name="Tabs">
+		<field name="TabId" type="INT" />
+		<field name="SupertabId" type="INT" />
+	</table>
+	<table name="Supertabs">
+	   <field name="SupertabId" type="INT" />
+	   <field name="UserId" type="VARCHAR(255)" description="SHA256(Password+UserIdSalt)" />
+	</table>
+</MySQLDB>
