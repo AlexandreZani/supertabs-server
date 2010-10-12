@@ -8,7 +8,7 @@ import java.security.SecureRandom;
 import net.supertabs.server.SupertabsRandom;
 
 public class User {
-    private static final int SALT_SZ = 256;
+    public static final int SALT_SZ = 256;
     private static final String HASH_ALGO = "SHA-256";
     private String username;
     private BigInteger salted_password;
