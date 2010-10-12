@@ -14,6 +14,7 @@ import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationExceptio
 
 public class AuthenticationDatabase {
     private Connection conn;
+    private long session_life = 24*60*60*1000;
     
     public AuthenticationDatabase(Connection c) {
         this.conn = c;
@@ -27,7 +28,6 @@ public class AuthenticationDatabase {
         stmt.execute();
         
         ResultSet results = stmt.getResultSet();
-        
         
         if(!results.next())
             return null;
@@ -58,5 +58,70 @@ public class AuthenticationDatabase {
             stmt.setString(5, u.getUsername());
             stmt.execute();
         }
+    }
+    
+    public String newSession(String ip, String user_id) throws NoSuchAlgorithmException, SQLException {
+        String sql = "INSERT INTO Sessions (SessionId, IP, UserId, LastTouched) VALUES(?, ?, ?, ?)";
+        boolean failed;
+        
+        PreparedStatement stmt;
+        BigInteger session_id;
+        byte[] bytes = new byte[User.SALT_SZ/8];
+        
+        do {
+            failed = false;
+            SupertabsRandom.getSecureRandom().nextBytes(bytes);
+            session_id = new BigInteger(bytes);
+            stmt = this.conn.prepareStatement(sql);
+            stmt.setString(1, session_id.toString(16));
+            stmt.setString(2, ip);
+            stmt.setString(3, user_id);
+            stmt.setLong(4, Calendar.getInstance().getTimeInMillis());
+            try {
+                stmt.execute();
+            } catch(MySQLIntegrityConstraintViolationException e) {
+                failed = true;
+            }
+        } while(failed);
+        
+        return session_id.toString(16);
+    }
+    
+    public String checkSession(String ip, String session_id) throws SQLException {
+        String user_id;
+        
+        String sql = "SELECT UserId FROM Sessions WHERE SessionId=? AND IP=? AND LastTouched>?";
+        PreparedStatement stmt;
+        stmt = this.conn.prepareStatement(sql);
+        stmt.setString(1, session_id);
+        stmt.setString(2, ip);
+        stmt.setLong(3, Calendar.getInstance().getTimeInMillis()-this.session_life);
+        
+        stmt.execute();
+        
+        ResultSet results = stmt.getResultSet();
+        
+        if(!results.next())
+            return null;
+        
+        user_id = results.getString("UserId");
+        
+        sql = "UPDATE Sessions SET LastTouched=? WHERE SessionId=? AND IP=?";
+        stmt = this.conn.prepareStatement(sql);
+        stmt.setLong(1, Calendar.getInstance().getTimeInMillis());
+        stmt.setString(2, session_id);
+        stmt.setString(3, ip);
+        
+        stmt.execute();
+
+        return user_id;
+    }
+
+    public void setSessionLife(long session_life) {
+        this.session_life = session_life;
+    }
+
+    public long getSessionLife() {
+        return session_life;
     }
 }

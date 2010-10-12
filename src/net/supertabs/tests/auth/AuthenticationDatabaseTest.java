@@ -79,5 +79,34 @@ public class AuthenticationDatabaseTest {
         
         assertTrue(u.equals(u2));
     }
-
+    
+    @Test
+    public void testSession() throws NoSuchAlgorithmException, SQLException {
+        String user_id = "deadbeef";
+        String session_id = this.db.newSession("127.0.0.1", user_id);
+        
+        String ret_uid = this.db.checkSession("127.0.0.1", session_id);
+        
+        assertEquals(user_id, ret_uid);
+    }
+    
+    @Test
+    public void testSessionWrongIP() throws NoSuchAlgorithmException, SQLException {
+        String user_id = "deadbeef";
+        String session_id = this.db.newSession("127.0.0.1", user_id);
+        
+        String ret_uid = this.db.checkSession("127.0.0.2", session_id);
+        
+        assertEquals(null, ret_uid);
+    }
+    
+    @Test
+    public void testSessionWrongSession() throws NoSuchAlgorithmException, SQLException {
+        String user_id = "deadbeef";
+        String session_id = this.db.newSession("127.0.0.1", user_id);
+        
+        String ret_uid = this.db.checkSession("127.0.0.1", "a1231ab");
+        
+        assertEquals(null, ret_uid);
+    }
 }
