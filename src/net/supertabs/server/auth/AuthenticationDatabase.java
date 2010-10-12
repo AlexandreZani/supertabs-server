@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Calendar;
 
 import net.supertabs.server.SupertabsRandom;
@@ -115,6 +116,14 @@ public class AuthenticationDatabase {
         stmt.execute();
 
         return user_id;
+    }
+    
+    public void deleteSession(String ip, String session_id) throws SQLException {
+        String sql = "DELETE FROM Sessions WHERE SessionId=? AND IP=?";
+        PreparedStatement stmt = this.conn.prepareStatement(sql);
+        stmt.setString(1, session_id);
+        stmt.setString(2, ip);
+        stmt.execute();
     }
 
     public void setSessionLife(long session_life) {

@@ -82,9 +82,10 @@ public class AuthenticationDatabaseTest {
     @Test
     public void testSession() throws NoSuchAlgorithmException, SQLException {
         String user_id = "deadbeef";
-        String session_id = this.db.newSession("127.0.0.1", user_id);
+        String ip = "127.0.0.1";
+        String session_id = this.db.newSession(ip, user_id);
         
-        String ret_uid = this.db.checkSession("127.0.0.1", session_id);
+        String ret_uid = this.db.checkSession(ip, session_id);
         
         assertEquals(user_id, ret_uid);
     }
@@ -92,7 +93,8 @@ public class AuthenticationDatabaseTest {
     @Test
     public void testSessionWrongIP() throws NoSuchAlgorithmException, SQLException {
         String user_id = "deadbeef";
-        String session_id = this.db.newSession("127.0.0.1", user_id);
+        String ip = "127.0.0.1";
+        String session_id = this.db.newSession(ip, user_id);
         
         String ret_uid = this.db.checkSession("127.0.0.2", session_id);
         
@@ -102,9 +104,23 @@ public class AuthenticationDatabaseTest {
     @Test
     public void testSessionWrongSession() throws NoSuchAlgorithmException, SQLException {
         String user_id = "deadbeef";
-        String session_id = this.db.newSession("127.0.0.1", user_id);
+        String ip = "127.0.0.1";
+        String session_id = this.db.newSession(ip, user_id);
         
-        String ret_uid = this.db.checkSession("127.0.0.1", "a1231ab");
+        String ret_uid = this.db.checkSession(ip, "a1231ab");
+        
+        assertEquals(null, ret_uid);
+    }
+    
+    @Test
+    public void testSessionDelete() throws NoSuchAlgorithmException, SQLException {
+        String user_id = "deadbeef";
+        String ip = "127.0.0.1";
+        String session_id = this.db.newSession(ip, user_id);
+        
+        this.db.deleteSession(ip, session_id);
+        
+        String ret_uid = this.db.checkSession(ip, session_id);
         
         assertEquals(null, ret_uid);
     }
