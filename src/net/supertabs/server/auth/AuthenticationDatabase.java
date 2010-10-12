@@ -1,10 +1,14 @@
 package net.supertabs.server.auth;
 
+import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
+
+import net.supertabs.server.SupertabsRandom;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
@@ -20,12 +24,13 @@ public class AuthenticationDatabase {
         
         PreparedStatement stmt = this.conn.prepareStatement(sql);
         stmt.setString(1, username);
-        if(!stmt.execute())
-            return null;
+        stmt.execute();
         
         ResultSet results = stmt.getResultSet();
         
-        results.next();
+        
+        if(!results.next())
+            return null;
         
         return new User(results.getString(1), results.getString(2),
                 results.getString(3), results.getString(4), results.getString(5));

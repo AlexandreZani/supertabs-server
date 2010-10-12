@@ -42,6 +42,13 @@ public class AuthenticationDatabaseTest {
     }
     
     @Test
+    public void testUnknownUser() throws NoSuchAlgorithmException, SQLException {
+        User u2 = this.db.getUser("username");
+        
+        assertEquals(null, u2);
+    }
+    
+    @Test
     public void testWriteUser() throws NoSuchAlgorithmException, SQLException {
         String password = "some password";
         String user_id = "deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0";
