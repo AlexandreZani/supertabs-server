@@ -85,7 +85,7 @@ public class AuthenticationDatabase {
         do {
             failed = false;
             SupertabsRandom.getSecureRandom().nextBytes(bytes);
-            session_id = new BigInteger(bytes);
+            session_id = new BigInteger(1, bytes);
             stmt = this.conn.prepareStatement(sql);
             stmt.setString(1, session_id.toString(16));
             stmt.setString(2, ip);
@@ -115,8 +115,15 @@ public class AuthenticationDatabase {
         
         ResultSet results = stmt.getResultSet();
         
-        if(!results.next())
+        if(!results.next()) {
+            sql = "DELETE FROM Sessions WHERE SessionId=? AND IP=?";
+            stmt = this.conn.prepareStatement(sql);
+            stmt.setString(1, session_id);
+            stmt.setString(2, ip);
+            
+            stmt.execute();
             return null;
+        }
         
         user_id = results.getString("UserId");
         

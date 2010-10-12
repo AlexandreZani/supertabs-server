@@ -153,4 +153,18 @@ public class AuthenticationDatabaseTest {
         
         assertEquals(null, ret_uid);
     }
+    
+    @Test
+    public void testSessionExpire() throws NoSuchAlgorithmException, SQLException, InterruptedException {
+        String user_id = "deadbeef";
+        String ip = "127.0.0.1";
+        this.db.setSessionLife(1);
+        String session_id = this.db.newSession(ip, user_id);
+        
+        Thread.sleep(2);
+        
+        String ret_uid = this.db.checkSession(ip, session_id);
+        
+        assertEquals(null, ret_uid);
+    }
 }
