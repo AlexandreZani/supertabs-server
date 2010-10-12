@@ -5,6 +5,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
+import net.supertabs.server.SupertabsRandom;
+
 public class User {
     private static final int SALT_SZ = 256;
     private static final String HASH_ALGO = "SHA-256";
@@ -30,11 +32,11 @@ public class User {
         return this.uid_salt.toString(16);
     }
     
-    public User(User u) {
+    public User(User u) throws NoSuchAlgorithmException {
         this(u.getUsername(), u.getSaltedPassword(), u.getPasswordSalt(), u.getEncryptedUserID(), u.getUserIDSalt());
     }
     
-    public User(String username, String salted_password, String password_salt, String encrypted_uid, String uid_salt) {
+    public User(String username, String salted_password, String password_salt, String encrypted_uid, String uid_salt) throws NoSuchAlgorithmException {
         this.username = username;
         this.salted_password = new BigInteger(salted_password, 16);
         this.password_salt = new BigInteger(password_salt, 16);
@@ -50,15 +52,15 @@ public class User {
             u.getUserIDSalt().equals(this.getUserIDSalt());
     }
     
-    public User(String username, String password, String user_id, SecureRandom random) throws NoSuchAlgorithmException {
+    public User(String username, String password, String user_id) throws NoSuchAlgorithmException {
         this.username = username;
-        this.setUserID(user_id, password, random);
-        this.setPassword(password, random);
+        this.setUserID(user_id, password);
+        this.setPassword(password);
     }
 
-    public void setPassword(String password, SecureRandom random) throws NoSuchAlgorithmException {
+    public void setPassword(String password) throws NoSuchAlgorithmException {
         byte[] bytes = new byte[User.SALT_SZ/8];
-        random.nextBytes(bytes);
+        SupertabsRandom.getSecureRandom().nextBytes(bytes);
         this.password_salt = new BigInteger(1, bytes);
         
         MessageDigest digest = MessageDigest.getInstance(HASH_ALGO);
@@ -68,10 +70,10 @@ public class User {
         this.salted_password = new BigInteger(digest.digest());
     }
     
-    public void changePassword(String old_password, String new_password, SecureRandom random) throws NoSuchAlgorithmException {
+    public void changePassword(String old_password, String new_password) throws NoSuchAlgorithmException {
         BigInteger uid = this.CryptUIDKey(this.encrypted_uid, old_password);
-        this.setUserID(uid.toString(16), new_password, random);
-        this.setPassword(new_password, random);
+        this.setUserID(uid.toString(16), new_password);
+        this.setPassword(new_password);
     }
     
     public boolean checkPassword(String password) throws NoSuchAlgorithmException {
@@ -82,9 +84,9 @@ public class User {
         return this.salted_password.equals(new BigInteger(digest.digest()));
     }
     
-    public void setUserID(String user_id, String password, SecureRandom random) throws NoSuchAlgorithmException {
+    public void setUserID(String user_id, String password) throws NoSuchAlgorithmException {
         byte[] bytes = new byte[User.SALT_SZ/8];
-        random.nextBytes(bytes);
+        SupertabsRandom.getSecureRandom().nextBytes(bytes);
         this.uid_salt = new BigInteger(1, bytes);
         
         BigInteger uid = new BigInteger(user_id, 16);
