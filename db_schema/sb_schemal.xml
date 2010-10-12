@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <MySQLDB name="SupertabsDB">
     <table name="Users">
-        <field name="UserName" type="VARCHAR(255)" />
+        <field name="UserName" unique="true" indexed="true" type="VARCHAR(255)" />
         <field name="SaltedPassword" type="VARCHAR(255)" description="SHA256(Password,Salt)" />
         <field name="PasswordSalt" type="VARCHAR(255)" />
         <field name="EncryptedUserId" type="VARCHAR(255)" />
