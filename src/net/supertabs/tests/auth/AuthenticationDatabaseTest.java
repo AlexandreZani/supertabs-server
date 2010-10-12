@@ -61,6 +61,20 @@ public class AuthenticationDatabaseTest {
         assertTrue(u.equals(u2));
     }
     
+    public void newUser() throws NoSuchAlgorithmException, SQLException {
+        String username = "username";
+        String password = "password";
+        String user_id = "deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0";
+        
+        User u = new User(username, password, user_id);
+        
+        this.db.newUser(username, password, user_id);
+        
+        User u2 = this.db.getUser(username);
+        
+        assertTrue(u.equals(u2));
+    }
+    
     @Test
     public void testChangeUser() throws NoSuchAlgorithmException, SQLException {
         String password = "some password";
@@ -77,6 +91,21 @@ public class AuthenticationDatabaseTest {
         User u2 = this.db.getUser("username");
         
         assertTrue(u.equals(u2));
+    }
+    
+    public void testNewSession() throws NoSuchAlgorithmException, SQLException {
+        String username = "username";
+        String password = "password";
+        String user_id = "deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0";
+        String ip = "127.0.0.1";
+        
+        this.db.newUser(username, password, user_id);
+        
+        String session_id = this.db.newSession(username, password, ip);
+        
+        String ret_uid = this.db.checkSession(ip, session_id);
+        
+        assertEquals(user_id, ret_uid);
     }
     
     @Test

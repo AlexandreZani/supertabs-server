@@ -37,6 +37,10 @@ public class AuthenticationDatabase {
                 results.getString(3), results.getString(4), results.getString(5));
     }
     
+    public void newUser(String username, String password, String user_id) throws NoSuchAlgorithmException, SQLException {
+        this.writeUser(new User(username, password, user_id));
+    }
+    
     public void writeUser(User u) throws SQLException {
         String sql = "INSERT INTO Users (UserName, SaltedPassword, PasswordSalt, EncryptedUserId, UserIdSalt) VALUES(?, ?, ?, ?, ?)";
         
@@ -59,6 +63,15 @@ public class AuthenticationDatabase {
             stmt.setString(5, u.getUsername());
             stmt.execute();
         }
+    }
+    
+    public String newSession(String username, String password, String ip) throws NoSuchAlgorithmException, SQLException {
+        User u = this.getUser(username);
+        if(!u.checkPassword(password))
+            return null;
+        
+        String uid = u.getUserID(password);
+        return this.newSession(ip, uid);
     }
     
     public String newSession(String ip, String user_id) throws NoSuchAlgorithmException, SQLException {
