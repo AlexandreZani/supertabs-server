@@ -134,7 +134,7 @@ public class AuthenticationDatabaseTest {
     public void testSessionWrongSession() throws NoSuchAlgorithmException, SQLException {
         String user_id = "deadbeef";
         String ip = "127.0.0.1";
-        String session_id = this.db.newSession(ip, user_id);
+        this.db.newSession(ip, user_id);
         
         String ret_uid = this.db.checkSession(ip, "a1231ab");
         
