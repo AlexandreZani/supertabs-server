@@ -4,7 +4,6 @@ package net.supertabs.tests.auth;
 import static org.junit.Assert.*;
 
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
