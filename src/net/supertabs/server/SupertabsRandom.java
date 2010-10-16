@@ -7,7 +7,7 @@ public class SupertabsRandom {
     private static final String RANDOM_ALGORITHM = "SHA1PRNG";
     private static SecureRandom random = null;
     
-    public static synchronized SecureRandom getSecureRandom() {
+    private static synchronized void setSecureRandom() {
         if(random == null) {
             try {
                 random = SecureRandom.getInstance(RANDOM_ALGORITHM);
@@ -15,8 +15,11 @@ public class SupertabsRandom {
                 throw new Error(e);
             }
         }
-        
-        return random;
+    }
+    
+    public static synchronized void nextBytes(byte[] bytes) {
+        setSecureRandom();
+        random.nextBytes(bytes);
     }
     
     

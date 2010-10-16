@@ -60,7 +60,7 @@ public class User {
     public void setPassword(String password) {
         try {
             byte[] bytes = new byte[User.SALT_SZ/8];
-            SupertabsRandom.getSecureRandom().nextBytes(bytes);
+            SupertabsRandom.nextBytes(bytes);
             this.password_salt = new BigInteger(1, bytes);
             
             MessageDigest digest = MessageDigest.getInstance(HASH_ALGO);
@@ -93,7 +93,7 @@ public class User {
     
     public void setUserID(String user_id, String password) {
         byte[] bytes = new byte[User.SALT_SZ/8];
-        SupertabsRandom.getSecureRandom().nextBytes(bytes);
+        SupertabsRandom.nextBytes(bytes);
         this.uid_salt = new BigInteger(1, bytes);
         
         BigInteger uid = new BigInteger(user_id, 16);

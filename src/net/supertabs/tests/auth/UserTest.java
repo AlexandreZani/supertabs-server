@@ -2,8 +2,6 @@ package net.supertabs.tests.auth;
 
 import static org.junit.Assert.*;
 
-import java.security.NoSuchAlgorithmException;
-
 import net.supertabs.server.auth.User;
 
 import org.junit.After;

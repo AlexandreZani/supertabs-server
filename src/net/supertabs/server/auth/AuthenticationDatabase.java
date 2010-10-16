@@ -93,7 +93,7 @@ public class AuthenticationDatabase {
             
             do {
                 failed = false;
-                SupertabsRandom.getSecureRandom().nextBytes(bytes);
+                SupertabsRandom.nextBytes(bytes);
                 session_id = new BigInteger(1, bytes);
                 stmt = this.conn.prepareStatement(sql);
                 stmt.setString(1, session_id.toString(16));
