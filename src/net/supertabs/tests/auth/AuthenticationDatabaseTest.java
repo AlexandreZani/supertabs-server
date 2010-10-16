@@ -41,14 +41,14 @@ public class AuthenticationDatabaseTest {
     }
     
     @Test
-    public void testUnknownUser() throws NoSuchAlgorithmException, SQLException {
+    public void testUnknownUser() throws NoSuchAlgorithmException {
         User u2 = this.db.getUser("username");
         
         assertEquals(null, u2);
     }
     
     @Test
-    public void testWriteUser() throws NoSuchAlgorithmException, SQLException {
+    public void testWriteUser() throws NoSuchAlgorithmException {
         String password = "some password";
         String user_id = "deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0";
         
@@ -61,7 +61,7 @@ public class AuthenticationDatabaseTest {
         assertTrue(u.equals(u2));
     }
     
-    public void newUser() throws NoSuchAlgorithmException, SQLException {
+    public void newUser() throws NoSuchAlgorithmException {
         String username = "username";
         String password = "password";
         String user_id = "deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0";
@@ -76,7 +76,7 @@ public class AuthenticationDatabaseTest {
     }
     
     @Test
-    public void testChangeUser() throws NoSuchAlgorithmException, SQLException {
+    public void testChangeUser() throws NoSuchAlgorithmException {
         String password = "some password";
         String user_id = "deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0";
         
@@ -93,7 +93,7 @@ public class AuthenticationDatabaseTest {
         assertTrue(u.equals(u2));
     }
     
-    public void testNewSession() throws NoSuchAlgorithmException, SQLException {
+    public void testNewSession() throws NoSuchAlgorithmException {
         String username = "username";
         String password = "password";
         String user_id = "deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0";
@@ -109,7 +109,7 @@ public class AuthenticationDatabaseTest {
     }
     
     @Test
-    public void testSession() throws NoSuchAlgorithmException, SQLException {
+    public void testSession() throws NoSuchAlgorithmException {
         String user_id = "deadbeef";
         String ip = "127.0.0.1";
         String session_id = this.db.newSession(ip, user_id);
@@ -120,7 +120,7 @@ public class AuthenticationDatabaseTest {
     }
     
     @Test
-    public void testSessionWrongIP() throws NoSuchAlgorithmException, SQLException {
+    public void testSessionWrongIP() throws NoSuchAlgorithmException {
         String user_id = "deadbeef";
         String ip = "127.0.0.1";
         String session_id = this.db.newSession(ip, user_id);
@@ -142,7 +142,7 @@ public class AuthenticationDatabaseTest {
     }
     
     @Test
-    public void testSessionDelete() throws NoSuchAlgorithmException, SQLException {
+    public void testSessionDelete() throws NoSuchAlgorithmException {
         String user_id = "deadbeef";
         String ip = "127.0.0.1";
         String session_id = this.db.newSession(ip, user_id);
@@ -155,7 +155,7 @@ public class AuthenticationDatabaseTest {
     }
     
     @Test
-    public void testSessionExpire() throws NoSuchAlgorithmException, SQLException, InterruptedException {
+    public void testSessionExpire() throws NoSuchAlgorithmException, InterruptedException {
         String user_id = "deadbeef";
         String ip = "127.0.0.1";
         this.db.setSessionLife(1);
