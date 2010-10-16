@@ -21,7 +21,7 @@ public class AuthenticationDatabase {
         this.conn = c;
     }
     
-    public User getUser(String username) throws NoSuchAlgorithmException {
+    public User getUser(String username) {
         try {
             String sql = "SELECT UserName, SaltedPassword, PasswordSalt, EncryptedUserId, UserIdSalt From Users WHERE UserName=?";
             
@@ -41,7 +41,7 @@ public class AuthenticationDatabase {
         }
     }
     
-    public void newUser(String username, String password, String user_id) throws NoSuchAlgorithmException {
+    public void newUser(String username, String password, String user_id) {
         this.writeUser(new User(username, password, user_id));
     }
     
@@ -73,7 +73,7 @@ public class AuthenticationDatabase {
         }
     }
     
-    public String newSession(String username, String password, String ip) throws NoSuchAlgorithmException {
+    public String newSession(String username, String password, String ip) {
         User u = this.getUser(username);
         if(!u.checkPassword(password))
             return null;
@@ -82,7 +82,7 @@ public class AuthenticationDatabase {
         return this.newSession(ip, uid);
     }
     
-    public String newSession(String ip, String user_id) throws NoSuchAlgorithmException {
+    public String newSession(String ip, String user_id) {
         try {
             String sql = "INSERT INTO Sessions (SessionId, IP, UserId, LastTouched) VALUES(?, ?, ?, ?)";
             boolean failed;

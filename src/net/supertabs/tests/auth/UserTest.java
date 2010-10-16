@@ -21,7 +21,7 @@ public class UserTest {
     }
 
     @Test
-    public void testGetUserID() throws NoSuchAlgorithmException {
+    public void testGetUserID() {
         String user_id = "deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0";
         String password = "test password";
         
@@ -31,7 +31,7 @@ public class UserTest {
     }
     
     @Test
-    public void testGetUserIDWrongPassword() throws NoSuchAlgorithmException {
+    public void testGetUserIDWrongPassword() {
         String user_id = "deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0";
         String password = "test password";
         
@@ -41,7 +41,7 @@ public class UserTest {
     }
     
     @Test
-    public void testCheckUserPasswordRight() throws NoSuchAlgorithmException {
+    public void testCheckUserPasswordRight() {
         String password = "some password";
         
         User u = new User("username", password, "a");
@@ -50,7 +50,7 @@ public class UserTest {
     }
     
     @Test
-    public void testCheckUserPasswordWrong() throws NoSuchAlgorithmException {
+    public void testCheckUserPasswordWrong() {
         String password = "some password";
         
         User u = new User("username", password, "a");
@@ -59,7 +59,7 @@ public class UserTest {
     }
     
     @Test
-    public void testCheckPasswordChange() throws NoSuchAlgorithmException {
+    public void testCheckPasswordChange() {
         String password = "some password";
         String user_id = "deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0";
         
@@ -70,7 +70,7 @@ public class UserTest {
     }
     
     @Test
-    public void testUserCopy() throws NoSuchAlgorithmException {
+    public void testUserCopy() {
         String password = "some password";
         String user_id = "deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0deadbeef0";
         
