@@ -1,17 +1,15 @@
 package net.supertabs.tests.auth;
 
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.HashMap;
 
 import net.supertabs.server.auth.AuthenticationDatabase;
+import net.supertabs.server.auth.InvalidCredentialsException;
 import net.supertabs.server.auth.SupertabsCredentials;
 import net.supertabs.server.auth.SupertabsCredentialsFactory;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,29 +36,29 @@ public class SupertabsCredentialsFactoryTest {
     }
     
     @Test
-    public void testUsernamePass() {
+    public void testUsernamePass() throws InvalidCredentialsException {
         this.db.newUser("alex", "pass", "deadbeef");
         HashMap<String, String> args = new HashMap<String, String>();
         args.put("username", "alex");
         args.put("password", "pass");
         
         SupertabsCredentials cred = SupertabsCredentialsFactory.getSupertabsCredentials("UsernamePassword", args, "127.0.0.1");
-        assertTrue(cred.Authenticate(db));
+        cred.getUserId(db);
     }
     
-    @Test
-    public void testUsernamePassFail() {
+    @Test(expected=InvalidCredentialsException.class)
+    public void testUsernamePassFail() throws InvalidCredentialsException {
         this.db.newUser("alex", "pass", "deadbeef");
         HashMap<String, String> args = new HashMap<String, String>();
         args.put("username", "alex");
         args.put("password", "passs");
         
         SupertabsCredentials cred = SupertabsCredentialsFactory.getSupertabsCredentials("UsernamePassword", args, "127.0.0.1");
-        assertFalse(cred.Authenticate(db));
+        cred.getUserId(db);
     }
     
     @Test
-    public void testSessionId() {
+    public void testSessionId() throws InvalidCredentialsException {
         String session_id = this.db.newSession("127.0.0.1", "deadbeef");
         
         HashMap<String, String> args = new HashMap<String, String>();
@@ -68,11 +66,11 @@ public class SupertabsCredentialsFactoryTest {
         
         SupertabsCredentials cred = SupertabsCredentialsFactory.getSupertabsCredentials("SessionId", args, "127.0.0.1");
         
-        assertTrue(cred.Authenticate(this.db));
+        cred.getUserId(this.db);
     }
     
-    @Test
-    public void testSessionIdFail() {
+    @Test(expected=InvalidCredentialsException.class)
+    public void testSessionIdFail() throws InvalidCredentialsException {
         this.db.newSession("127.0.0.1", "deadbeef");
         
         HashMap<String, String> args = new HashMap<String, String>();
@@ -80,6 +78,6 @@ public class SupertabsCredentialsFactoryTest {
         
         SupertabsCredentials cred = SupertabsCredentialsFactory.getSupertabsCredentials("SessionId", args, "127.0.0.1");
         
-        assertFalse(cred.Authenticate(this.db));
+        cred.getUserId(this.db);
     }
 }

@@ -5,7 +5,6 @@ import java.util.HashMap;
 public class SessionIdCredentials implements SupertabsCredentials {
     private String session_id;
     private String ip;
-    private String uid = null;
     public final static String TYPE = "SessionId";
     
     public SessionIdCredentials(HashMap<String, String> args, String ip) {
@@ -14,24 +13,20 @@ public class SessionIdCredentials implements SupertabsCredentials {
     }
 
     @Override
-    public boolean Authenticate(AuthenticationDatabase db) {
+    public String getUserId(AuthenticationDatabase db) throws InvalidCredentialsException {
         if(this.ip == null || this.session_id == null)
-            return false;
+            throw new InvalidCredentialsException("No session id was provided.");
         
-        if((this.uid = db.checkSession(ip, this.session_id)) == null)
-            return false;
+        String uid;
+        if((uid = db.checkSession(ip, this.session_id)) == null)
+            throw new InvalidCredentialsException("Invalid session id.");
         
-        return true;
+        return uid;
     }
 
     @Override
     public String getResponse() {
         return "";
-    }
-
-    @Override
-    public String getUserId() {
-        return this.uid;
     }
 
     @Override

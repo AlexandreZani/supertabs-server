@@ -7,7 +7,6 @@ public class UsernamePasswordCredentials implements SupertabsCredentials {
     private String password;
     private String ip;
     private String response = null;
-    private String uid = null;
     public final static String TYPE = "UsernamePassword";
     
     public UsernamePasswordCredentials(HashMap<String, String> args, String ip) {
@@ -17,33 +16,28 @@ public class UsernamePasswordCredentials implements SupertabsCredentials {
     }
 
     @Override
-    public boolean Authenticate(AuthenticationDatabase db) {
+    public String getUserId(AuthenticationDatabase db) throws InvalidCredentialsException {
         if(this.username == null || this.password == null) {
-            return false;
+            throw new InvalidCredentialsException("Missing username or password!");
         }
         
         User u = db.getUser(this.username);
         if(!u.checkPassword(this.password)) {
-            return false;
+            throw new InvalidCredentialsException("Invalid username password combination!");
         }
         
-        this.uid = u.getUserID(this.password);
+        String uid = u.getUserID(this.password); 
         
-        String sid = db.newSession(this.ip, this.uid);
+        String sid = db.newSession(this.ip, uid);
         
         this.response = "<credentials><method>SessionID</method><arguments><session_id>" + sid + "</session_id></arguments></credentials>";
         
-        return true;
+        return uid;
     }
 
     @Override
     public String getResponse() {
         return this.response;
-    }
-
-    @Override
-    public String getUserId() {
-        return this.uid;
     }
 
     @Override
