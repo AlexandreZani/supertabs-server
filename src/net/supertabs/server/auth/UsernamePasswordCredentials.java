@@ -22,7 +22,7 @@ public class UsernamePasswordCredentials implements SupertabsCredentials {
         }
         
         User u = db.getUser(this.username);
-        if(!u.checkPassword(this.password)) {
+        if(!(u != null && u.checkPassword(this.password))) {
             throw new InvalidCredentialsException("Invalid username password combination!");
         }
         

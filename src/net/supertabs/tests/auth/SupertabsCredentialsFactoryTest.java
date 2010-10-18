@@ -47,6 +47,17 @@ public class SupertabsCredentialsFactoryTest {
     }
     
     @Test(expected=InvalidCredentialsException.class)
+    public void testUsernamePassWrongUsername() throws InvalidCredentialsException {
+        this.db.newUser("alex", "pass", "deadbeef");
+        HashMap<String, String> args = new HashMap<String, String>();
+        args.put("username", "alex2");
+        args.put("password", "pass");
+        
+        SupertabsCredentials cred = SupertabsCredentialsFactory.getSupertabsCredentials("UsernamePassword", args, "127.0.0.1");
+        cred.getUserId(db);
+    }
+    
+    @Test(expected=InvalidCredentialsException.class)
     public void testUsernamePassFail() throws InvalidCredentialsException {
         this.db.newUser("alex", "pass", "deadbeef");
         HashMap<String, String> args = new HashMap<String, String>();
