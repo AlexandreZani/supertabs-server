@@ -1,5 +1,7 @@
 package net.supertabs.tests.auth;
 
+import static org.junit.Assert.*;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
@@ -7,6 +9,7 @@ import java.util.HashMap;
 
 import net.supertabs.server.auth.AuthenticationDatabase;
 import net.supertabs.server.auth.InvalidCredentialsException;
+import net.supertabs.server.auth.NoneCredentials;
 import net.supertabs.server.auth.SupertabsCredentials;
 import net.supertabs.server.auth.SupertabsCredentialsFactory;
 
@@ -90,5 +93,15 @@ public class SupertabsCredentialsFactoryTest {
         SupertabsCredentials cred = SupertabsCredentialsFactory.getSupertabsCredentials("SessionId", args, "127.0.0.1");
         
         cred.getUserId(this.db);
+    }
+    
+    @Test
+    public void testNoneCredentials() throws InvalidCredentialsException {
+        HashMap<String, String> args = new HashMap<String, String>();
+        args.put("session_id", "deadbeef");
+        
+        SupertabsCredentials cred = SupertabsCredentialsFactory.getSupertabsCredentials("", args, "127.0.0.1");
+        
+        assertEquals(NoneCredentials.TYPE, cred.getCredentialsType()); 
     }
 }

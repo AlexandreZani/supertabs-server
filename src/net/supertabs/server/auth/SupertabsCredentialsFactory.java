@@ -9,6 +9,6 @@ public class SupertabsCredentialsFactory {
         else if(type == SessionIdCredentials.TYPE)
             return new SessionIdCredentials(args, ip);
         else
-            return null;
+            return new NoneCredentials();
     }
 }
