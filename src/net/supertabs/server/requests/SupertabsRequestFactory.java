@@ -16,27 +16,6 @@ import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-/*
- *         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        
-        Reader reader = new StringReader(xml);
-        InputSource is = new InputSource(reader);
-        
-        Document doc = builder.parse(is);
-        
-        Element top = (Element) doc.getFirstChild();
-        
-        Element auth = (Element) top.getElementsByTagName("authentication").item(0);
-        
-        this.auth_method = auth.getElementsByTagName("method").item(0).getTextContent();
-        
-        Node n = auth.getElementsByTagName("arguments").item(0).getFirstChild();
-        while(n != null) {
-            this.auth_args.put(n.getNodeName(), n.getTextContent());
-            n = n.getNextSibling();
-        }
- */
-
 public class SupertabsRequestFactory {
     static public SupertabsRequest getRequest(String xml, String ip) throws SAXException, IOException, ParserConfigurationException {
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
